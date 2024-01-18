@@ -40,6 +40,16 @@ App::App(const wchar* appName, const wchar* cmdLine) : window(nullptr, appName, 
 
 {
     GlobalApp = this;
+
+    wchar exePath[MAX_PATH] = { };
+    GetModuleFileName(nullptr, exePath, ArraySize_(exePath));
+    const std::wstring exeDir = GetDirectoryFromFilePath(exePath);
+
+    wchar expectedCurrDirectory[MAX_PATH] = { };
+    GetFullPathName((exeDir + L"..\\..").c_str(), ArraySize_(expectedCurrDirectory), expectedCurrDirectory, nullptr);
+
+    SetCurrentDirectory(expectedCurrDirectory);
+
     for(uint32 i = 0; i < NumTimeDeltaSamples; ++i)
         timeDeltaBuffer[i] = 0.0f;
 
